@@ -1,64 +1,108 @@
-# Pocket Ledger
+# Finance Dashboard
 
-A simple personal budget dashboard. The idea is pretty basic: make an account, add expenses, and get a quick picture of where the money went that month.
+This is a small fullstack JavaScript project for tracking personal expenses. I built it as a practice project to work with the usual pieces of a web app: login, forms, CRUD routes, protected data, and a couple of charts.
 
-This uses a JSON file for storage, so it is easy to run locally without setting up a database. It is not meant to be a bank-grade app, just a clean fullstack JavaScript project.
+The app lets a user make an account, add expenses, put them into categories, and see a monthly breakdown. It is not meant to be a real banking or accounting product. The data is saved in a local JSON file so the project is easy to run without setting up a database.
 
-## Running it
+## Tech Used
 
-1. Open this folder in WebStorm:
+- React
+- Vite
+- React Router
+- Recharts
+- Node.js
+- Express
+- JSON Web Tokens
+- bcryptjs
 
-   `C:\Users\Max\Documents\Codex\2026-05-24\let-s-create-a-project-in`
+## How to Run
 
-2. Install dependencies:
+Open the project folder in WebStorm:
 
-   ```bash
-   npm install
-   ```
+`C:\Users\Max\WebstormProjects\finance-dashboard`
 
-3. Start the fullstack dev app:
+Install everything:
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm install
+```
 
-4. Open the app:
+Start the frontend and backend:
 
-   `http://127.0.0.1:5173`
+```bash
+npm run dev
+```
 
-The backend runs on port `4000`, and Vite proxies `/api` requests to it.
+Then open:
 
-## What is inside
+```text
+http://127.0.0.1:5173
+```
 
-- `client/` - React app
-- `server/` - Express API
-- `server/data/db.json` - local data file created while the app runs
+The API runs on port `4000`. The frontend uses Vite's proxy so calls to `/api` go to the Express server.
 
-## Main features
+## Project Structure
 
-- email/password signup and login
-- add, edit, and delete expenses
-- filter expenses by month and category
-- pie chart for category totals
-- bar chart for daily spending
+```text
+client/                 React frontend
+server/                 Express backend
+server/src/routes.js    Main API routes
+server/src/auth.js      JWT auth middleware
+server/src/db.js        Local JSON file read/write helpers
+docs/                   PDF explanation of the project
+```
 
-## Learning documentation
+## Features
 
-I added a beginner-friendly project guide here:
+- register and log in
+- keep expenses private per user
+- add expenses
+- edit expenses
+- delete expenses
+- filter by month and category
+- show category spending in a pie chart
+- show daily spending in a bar chart
 
-`docs/Pocket_Ledger_Learning_Guide.pdf`
+## API Routes
 
-## API
+```text
+POST   /api/auth/register
+POST   /api/auth/login
+GET    /api/auth/me
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-- `GET /api/expenses`
-- `POST /api/expenses`
-- `PUT /api/expenses/:id`
-- `DELETE /api/expenses/:id`
-- `GET /api/summary?month=YYYY-MM`
+GET    /api/expenses
+POST   /api/expenses
+PUT    /api/expenses/:id
+DELETE /api/expenses/:id
 
-## Notes
+GET    /api/summary?month=YYYY-MM
+```
 
-If you want to reset the demo data, stop the server and delete `server/data/db.json`.
+## Documentation
+
+There is a PDF walkthrough in:
+
+```text
+docs/Pocket_Ledger_Learning_Guide.pdf
+```
+
+It explains the project for someone who is still learning programming and wants to understand how the frontend, backend, auth, CRUD, and charts fit together.
+
+## Resetting Local Data
+
+The app creates this file while running:
+
+```text
+server/data/db.json
+```
+
+To reset the local accounts and expenses, stop the server and delete that file. It will be created again the next time the backend starts.
+
+## Things I Would Improve Later
+
+- use a real database instead of a JSON file
+- add budget limits per category
+- add search by description
+- add better form validation messages
+- add tests for the API routes
+- deploy the frontend and backend
