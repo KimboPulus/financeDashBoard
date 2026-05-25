@@ -42,6 +42,12 @@ The backend runs on port `4000`, and Vite proxies `/api` requests to it.
 - pie chart for category totals
 - bar chart for daily spending
 
+## Learning documentation
+
+I added a beginner-friendly project guide here:
+
+`docs/Pocket_Ledger_Learning_Guide.pdf`
+
 ## API
 
 - `POST /api/auth/register`
