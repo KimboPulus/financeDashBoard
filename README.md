@@ -78,16 +78,6 @@ DELETE /api/expenses/:id
 GET    /api/summary?month=YYYY-MM
 ```
 
-## Documentation
-
-There is a PDF walkthrough in:
-
-```text
-docs/Pocket_Ledger_Learning_Guide.pdf
-```
-
-It explains the project for someone who is still learning programming and wants to understand how the frontend, backend, auth, CRUD, and charts fit together.
-
 ## Resetting Local Data
 
 The app creates this file while running:
