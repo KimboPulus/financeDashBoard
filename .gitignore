@@ -4,8 +4,11 @@ dist
 .env.local
 *.log
 .DS_Store
-server/data/db.json
-npm-debug.log*
-
 .idea/
 dashboard-preview.png
+docs/.pdfdeps/
+docs/pdf-preview/
+docs/rendered-guide/
+docs/*.docx
+server/data/db.json
+npm-debug.log*
