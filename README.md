@@ -8,7 +8,7 @@ The app lets a user make an account, add expenses, put them into categories, and
 
 ![Dashboard overview](docs/images/dashboard-overview.png)
 
-![Charts and expense log](docs/images/dashboard-charts.png)
+![Daily spending and expense log](docs/images/dashboard-expenses.png)
 
 ## Tech Used
 
@@ -55,7 +55,7 @@ server/                 Express backend
 server/src/routes.js    Main API routes
 server/src/auth.js      JWT auth middleware
 server/src/db.js        Local JSON file read/write helpers
-docs/                   PDF explanation of the project
+docs/images/            Screenshots used in this README
 ```
 
 ## Features
