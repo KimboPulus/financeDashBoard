@@ -4,6 +4,12 @@ This is a small fullstack JavaScript project for tracking personal expenses. I b
 
 The app lets a user make an account, add expenses, put them into categories, and see a monthly breakdown. It is not meant to be a real banking or accounting product. The data is saved in a local JSON file so the project is easy to run without setting up a database.
 
+## Screenshots
+
+![Dashboard overview](docs/images/dashboard-overview.png)
+
+![Charts and expense log](docs/images/dashboard-charts.png)
+
 ## Tech Used
 
 - React
