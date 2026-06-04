@@ -9,6 +9,12 @@ dashboard-preview.png
 docs/.pdfdeps/
 docs/pdf-preview/
 docs/rendered-guide/
+docs/*.pdf
 docs/*.docx
+server/.venv/
+server/__pycache__/
+server/app/__pycache__/
+server/tests/__pycache__/
+server/.pytest_cache/
 server/data/db.json
 npm-debug.log*
