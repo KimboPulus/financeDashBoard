@@ -8,7 +8,9 @@
     "dev:api": "server\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --app-dir server --reload --host 127.0.0.1 --port 4000",
     "dev:client": "npm run dev --workspace client",
     "build": "npm run build --workspace client",
+    "test:client": "npm run test --workspace client",
     "test:api": "server\\.venv\\Scripts\\python.exe -m pytest server/tests",
+    "test": "npm run test:client && npm run test:api",
     "start:api": "server\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --app-dir server --host 127.0.0.1 --port 4000"
   },
   "workspaces": [

@@ -19,11 +19,13 @@ Users can create an account, log in, add expenses, edit them, delete them, filte
 - Python
 - JWT auth
 - pytest
+- Vitest
+- React Testing Library
 
 ## Project Structure
 
 ```text
-client/                 React frontend
+client/                 React frontend and component tests
 server/app/             FastAPI backend
 server/tests/           API tests
 server/data/db.json     Local data file created while the API runs
@@ -81,7 +83,14 @@ http://127.0.0.1:4000/docs
 ## Run Tests
 
 ```bash
+npm run test:client
 npm run test:api
+```
+
+Run both suites with:
+
+```bash
+npm test
 ```
 
 ## API Routes
