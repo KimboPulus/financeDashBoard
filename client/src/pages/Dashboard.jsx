@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import { CalendarDays, LogOut, Pencil, Plus, Trash2, WalletCards } from 'lucide-react';
+import { CalendarDays, LogOut, Pencil, Plus, Target, Trash2, WalletCards } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../services/api.js';
 import { useAuth } from '../services/AuthContext.jsx';
@@ -72,6 +72,10 @@ export function Dashboard() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
+  const [budget, setBudget] = useState({ month: currentMonth(), amount: 0 });
+  const [budgetInput, setBudgetInput] = useState('');
+  const [budgetError, setBudgetError] = useState('');
+  const [budgetSaved, setBudgetSaved] = useState(false);
 
   async function loadDashboard() {
     const params = { month };
@@ -80,13 +84,17 @@ export function Dashboard() {
       params.category = category;
     }
 
-    const [expensesResult, summaryResult] = await Promise.all([
+    const [expensesResult, summaryResult, budgetResult] = await Promise.all([
       api.get('/expenses', { params }),
-      api.get('/summary', { params: { month } })
+      api.get('/summary', { params: { month } }),
+      api.get('/budget', { params: { month } })
     ]);
 
     setExpenses(expensesResult.data.expenses);
     setSummary(summaryResult.data);
+    setBudget(budgetResult.data);
+    setBudgetInput(budgetResult.data.amount ? String(budgetResult.data.amount) : '');
+    setBudgetSaved(false);
   }
 
   useEffect(() => {
@@ -96,6 +104,27 @@ export function Dashboard() {
   const biggestCategory = useMemo(() => {
     return summary.byCategory.reduce((top, item) => (item.total > (top?.total || 0) ? item : top), null);
   }, [summary.byCategory]);
+
+  const budgetUsage = budget.amount > 0 ? (summary.total / budget.amount) * 100 : 0;
+  const budgetDifference = budget.amount - summary.total;
+
+  async function handleBudgetSubmit(event) {
+    event.preventDefault();
+    setBudgetError('');
+    setBudgetSaved(false);
+
+    try {
+      const { data } = await api.put('/budget', {
+        month,
+        amount: Number(budgetInput)
+      });
+      setBudget(data.budget);
+      setBudgetInput(String(data.budget.amount));
+      setBudgetSaved(true);
+    } catch (err) {
+      setBudgetError(err.response?.data?.message || 'Unable to save budget.');
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -182,6 +211,48 @@ export function Dashboard() {
           <span>Biggest bucket</span>
           <strong>{biggestCategory ? biggestCategory.category : 'None'}</strong>
         </article>
+      </section>
+
+      <section className={`budget-panel${budget.amount > 0 && budgetDifference < 0 ? ' over-budget' : ''}`}>
+        <div className="budget-details">
+          <div className="budget-heading">
+            <span className="budget-icon">
+              <Target size={20} />
+            </span>
+            <div>
+              <h2>Monthly budget</h2>
+              <strong>{budget.amount > 0 ? money(budget.amount) : 'Not set'}</strong>
+            </div>
+          </div>
+          <progress max="100" value={Math.min(budgetUsage, 100)} />
+          <p>
+            {budget.amount > 0
+              ? budgetDifference >= 0
+                ? `${Math.round(budgetUsage)}% used, ${money(budgetDifference)} remaining`
+                : `${money(Math.abs(budgetDifference))} over budget`
+              : 'Set a spending target for this month.'}
+          </p>
+        </div>
+        <form className="budget-form" onSubmit={handleBudgetSubmit}>
+          <label>
+            Budget amount
+            <input
+              min="0.01"
+              step="0.01"
+              type="number"
+              value={budgetInput}
+              onChange={(event) => setBudgetInput(event.target.value)}
+              placeholder="1500"
+              required
+            />
+          </label>
+          <button className="primary-button" type="submit">
+            <Target size={18} />
+            Save budget
+          </button>
+          {budgetError && <p className="form-error">{budgetError}</p>}
+          {budgetSaved && <p className="form-success">Budget saved.</p>}
+        </form>
       </section>
 
       <section className="dashboard-grid">

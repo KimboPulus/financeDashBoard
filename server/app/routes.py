@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from .categories import CATEGORIES
 from .database import JsonStore
 from .dependencies import get_store
-from .schemas import ExpensePayload, LoginPayload, RegisterPayload
+from .schemas import BudgetPayload, ExpensePayload, LoginPayload, RegisterPayload
 from .security import create_token, current_user_payload, hash_password, verify_password
 from .validation import MONTH_PATTERN, normalize_email, public_user, validate_expense
 
@@ -191,6 +191,57 @@ def delete_expense(
     db["expenses"] = [candidate for candidate in db["expenses"] if candidate["id"] != expense_id]
     store.write(db)
     return Response(status_code=204)
+
+
+@router.get("/budget")
+def get_budget(
+    user_payload: Annotated[dict, Depends(current_user_payload)],
+    store: Annotated[JsonStore, Depends(get_store)],
+    month: str = Query(default=""),
+) -> dict[str, str | float]:
+    selected_month = month if MONTH_PATTERN.match(month) else datetime.now(timezone.utc).date().isoformat()[:7]
+    db = store.read()
+    budget = next(
+        (
+            item
+            for item in db["budgets"]
+            if item["userId"] == user_payload["sub"] and item["month"] == selected_month
+        ),
+        None,
+    )
+
+    return {"month": selected_month, "amount": budget["amount"] if budget else 0}
+
+
+@router.put("/budget")
+def save_budget(
+    payload: BudgetPayload,
+    user_payload: Annotated[dict, Depends(current_user_payload)],
+    store: Annotated[JsonStore, Depends(get_store)],
+) -> JSONResponse:
+    month = payload.month.strip()
+    if not MONTH_PATTERN.match(month) or payload.amount <= 0:
+        return api_error(400, "Enter a valid month and a budget greater than zero.")
+
+    db = store.read()
+    budget = next(
+        (
+            item
+            for item in db["budgets"]
+            if item["userId"] == user_payload["sub"] and item["month"] == month
+        ),
+        None,
+    )
+
+    if budget is None:
+        budget = {"userId": user_payload["sub"], "month": month, "amount": payload.amount}
+        db["budgets"].append(budget)
+    else:
+        budget["amount"] = payload.amount
+
+    budget["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    store.write(db)
+    return JSONResponse(content={"budget": {"month": month, "amount": budget["amount"]}})
 
 
 @router.get("/summary")

@@ -29,3 +29,8 @@ class ExpensePayload(BaseModel):
     category: str
     description: str
     notes: str = ""
+
+
+class BudgetPayload(BaseModel):
+    month: str
+    amount: float

@@ -2,7 +2,7 @@
 
 A small fullstack app for tracking personal expenses. The frontend is built with React, and the backend is a Python API built with FastAPI.
 
-Users can create an account, log in, add expenses, edit them, delete them, filter by month/category, and see simple charts for monthly spending.
+Users can create an account, log in, add expenses, edit them, delete them, filter by month/category, set a monthly budget, and see simple charts for monthly spending.
 
 ## Screenshots
 
@@ -104,6 +104,9 @@ GET    /api/expenses
 POST   /api/expenses
 PUT    /api/expenses/:id
 DELETE /api/expenses/:id
+
+GET    /api/budget?month=YYYY-MM
+PUT    /api/budget
 
 GET    /api/summary?month=YYYY-MM
 ```

@@ -12,13 +12,15 @@ class JsonStore:
     def _ensure_file(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         if not self.path.exists():
-            self.write({"users": [], "expenses": []})
+            self.write({"users": [], "expenses": [], "budgets": []})
 
     def read(self) -> dict[str, list[dict[str, Any]]]:
         with self._lock:
             self._ensure_file()
             with self.path.open("r", encoding="utf-8") as file:
-                return json.load(file)
+                data = json.load(file)
+                data.setdefault("budgets", [])
+                return data
 
     def write(self, data: dict[str, list[dict[str, Any]]]) -> None:
         with self._lock:
